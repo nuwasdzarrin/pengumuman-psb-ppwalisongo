@@ -5,10 +5,14 @@ class Announcement_model extends CI_Model
 {
 	public function get_announcement($keyword = null)
 	{
-		$this->db->select('*');
+		$this->db->select('name, status_selection, number, virtual_account');
 		$this->db->from('student');
 		$this->db->where('nik',$keyword);
 		$this->db->or_where('number',$keyword);
-		return $this->db->get()->result();
+		return $this->db->limit(1)->get()->result();
+	}
+
+	public function get_setting() {
+		return $this->db->select('*')->from('announcement_setting')->limit(1)->get()->result();
 	}
 }

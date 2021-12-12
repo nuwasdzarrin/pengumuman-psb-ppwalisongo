@@ -57,10 +57,10 @@
 
 		<nav id="navbar" class="navbar">
 			<ul>
-				<li><a class="nav-link scrollto active" href="/informasi">Informasi</a></li>
+				<li><a class="nav-link scrollto" href="/informasi">Informasi</a></li>
 				<li><a class="nav-link scrollto" href="/prosedur">Alur Pendaftaran</a></li>
 				<li><a class="nav-link scrollto" href="/contact">Contact</a></li>
-				<li><a class="nav-link scrollto" href="/pengumuman">Pengumuman</a></li>
+				<li><a class="nav-link scrollto active" href="/pengumuman">Pengumuman</a></li>
 			</ul>
 			<i class="bi bi-list mobile-nav-toggle"></i>
 		</nav><!-- .navbar -->
@@ -74,233 +74,157 @@
 	<section id="about" class="about">
 		<div class="container" data-aos="fade-up">
 
-			<div class="section-title mt-5" style="padding-bottom: 0;">
+			<div class="section-title mt-5">
 				<h2>Pengumuman PSB</h2>
 			</div>
 
 			<div class="row content">
 				<div class="col-xs-1 col-md-2 col-lg-3">&nbsp;</div>
 				<div class="col-xs-10 col-md-8 col-lg-6 text-center">
-					<p>
-						Silahkan masukkan NIK atau nomor stambuk peserta untuk mencari hasil pengumuman
-					</p>
-					<form>
-						<div class="form-group mb-3">
-							<input class="form-control">
-							<div class="invalid-feedback error-message">
-								NIK atau nomor stambuk tidak ditemukan, Silahkam masukkan kembali dengan benar
+					<?php
+					$now=date('Y-m-d');
+					$startDate = date('Y-m-d', strtotime($setting[0]->start_date));
+					$endDate = date('Y-m-d', strtotime($setting[0]->end_date));
+					?>
+					<?php if($startDate <= $now && $now <= $endDate) { ?>
+						<?php if(!$data) { ?>
+							<p>
+								Silahkan masukkan NIK atau nomor stambuk peserta untuk mencari hasil pengumuman
+							</p>
+							<form method="GET">
+								<div class="form-group mb-3">
+									<input type="number" class="form-control" name="keyword" <?php if (isset($_GET['keyword']) && !$data) echo "style='border-color: #dc3545;'"; ?> value="<?php if (isset($_GET['keyword'])) echo $_GET['keyword'];?>" required>
+									<?php if (isset($_GET['keyword']) && !$data) {?>
+									<div class="invalid-feedback error-message">
+										NIK atau nomor stambuk tidak ditemukan, Silahkan masukan kembali dengan benar
+									</div>
+									<?php }?>
+								</div>
+								<div class="row">
+									<div class="col-3">&nbsp;</div>
+									<div class="col-6">
+										<button type="submit" class="btn btn-primary button-block" style="background-color: #2487ce">
+											<i class="bx bx-search"></i>&nbsp;Cari
+										</button>
+									</div>
+									<div class="col-3">&nbsp;</div>
+								</div>
+							</form>
+						<?php } else { ?>
+							<?php foreach ($data as $d) { ?>
+								<?php if($d->status_selection == 'pass') { ?>
+									<div class="card">
+										<div class="card-header alert-success"></div>
+										<div class="card-body">
+											<?php echo $setting[0]->pass_opening;?>
+											<div class="alert-success" style="padding: 15px; margin-bottom: 25px;">
+												<table>
+													<tr class="pass-data">
+														<td class="text-start">Nama</td>
+														<td class="text-start">: <?php echo $d->name;?></td>
+													</tr>
+													<tr>
+														<td class="text-start">Nomor Stambuk (NIS)</td>
+														<td class="text-start">: <?php echo $d->number;?></td>
+													</tr>
+													<tr>
+														<td class="text-start">Virtual Account (Bank Muamalat)</td>
+														<td class="text-start">: <?php echo $d->virtual_account;?></td>
+													</tr>
+													<tr>
+														<td class="text-start">Link SIAP</td>
+														<td class="text-start" style="overflow-wrap: anywhere;">: <a href="http://www.siap.ppwalisongo.id/user">http://www.siap.ppwalisongo.id/user</a></td>
+													</tr>
+												</table>
+											</div>
+											<?php echo $setting[0]->pass_closing;?>
+										</div>
+										<div class="card-footer">
+											<a href="/" class="btn btn-primary" style="background-color: #2487ce">Kembali ke pencarian</a>
+										</div>
+									</div>
+								<?php } elseif ($d->status_selection == 'fail') { ?>
+									<div class="card">
+										<div class="card-header alert-danger"></div>
+										<div class="card-body">
+											<?php echo $setting[0]->failed_opening;?>
+											<p class="alert-danger" style="padding: 15px;">Nama: <?php echo $d->name;?></p>
+											<?php echo $setting[0]->failed_closing;?>
+										</div>
+										<div class="card-footer">
+											<a href="/" class="btn btn-primary" style="background-color: #2487ce">Kembali ke pencarian</a>
+										</div>
+									</div>
+								<?php } elseif ($d->status_selection == 'notyet') { ?>
+									<div class="card">
+										<div class="card-header alert-warning"></div>
+										<div class="card-body">
+											<?php echo $setting[0]->notyet;?>
+										</div>
+										<div class="card-footer">
+											<a href="/" class="btn btn-primary" style="background-color: #2487ce">Kembali ke pencarian</a>
+										</div>
+									</div>
+								<?php } ?>
+							<?php } ?>
+						<?php } ?>
+					<?php } else { ?>
+						<div class="card">
+							<div class="card-header alert-info"></div>
+							<div class="card-body">
+								<?php echo $setting[0]->out_session;?>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-3">&nbsp;</div>
-							<div class="col-6">
-								<button type="submit" class="btn btn-success button-block">
-									<i class="bx bx-search"></i>&nbsp;Cari
-								</button>
-							</div>
-							<div class="col-3">&nbsp;</div>
-						</div>
-					</form>
+					<?php } ?>
 				</div>
 				<div class="col-xs-1 col-md-2 col-lg-3">&nbsp;</div>
 			</div>
 		</div>
 	</section><!-- End About Section -->
-
-	<!-- ======= Clients Section ======= -->
-	<section id="clients" class="clients section-bg">
-		<div class="container">
-
-			<div class="row">
-
-				<div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="zoom-in">
-					<img src="/assets/img/clients/client-1.png" class="img-fluid" alt="">
-				</div>
-
-				<div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="zoom-in">
-					<img src="/assets/img/clients/client-2.png" class="img-fluid" alt="">
-				</div>
-
-				<div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="zoom-in">
-					<img src="/assets/img/clients/client-3.png" class="img-fluid" alt="">
-				</div>
-
-				<div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="zoom-in">
-					<img src="/assets/img/clients/client-4.png" class="img-fluid" alt="">
-				</div>
-
-				<div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="zoom-in">
-					<img src="/assets/img/clients/client-5.png" class="img-fluid" alt="">
-				</div>
-
-				<div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="zoom-in">
-					<img src="/assets/img/clients/client-6.png" class="img-fluid" alt="">
-				</div>
-
-			</div>
-
-		</div>
-	</section><!-- End Clients Section -->
-
-	<!-- ======= Testimonials Section ======= -->
-	<section id="testimonials" class="testimonials">
-		<div class="container" data-aos="fade-up">
-
-			<div class="section-title">
-				<h2>Testimonials</h2>
-				<p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
-			</div>
-
-			<div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
-				<div class="swiper-wrapper">
-
-					<div class="swiper-slide">
-						<div class="testimonial-item">
-							<p>
-								<i class="bx bxs-quote-alt-left quote-icon-left"></i>
-								Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper.
-								<i class="bx bxs-quote-alt-right quote-icon-right"></i>
-							</p>
-							<img src="/assets/img/testimonials/testimonials-1.jpg" class="testimonial-img" alt="">
-							<h3>Saul Goodman</h3>
-							<h4>Ceo &amp; Founder</h4>
-						</div>
-					</div><!-- End testimonial item -->
-
-					<div class="swiper-slide">
-						<div class="testimonial-item">
-							<p>
-								<i class="bx bxs-quote-alt-left quote-icon-left"></i>
-								Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid cillum eram malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa.
-								<i class="bx bxs-quote-alt-right quote-icon-right"></i>
-							</p>
-							<img src="/assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
-							<h3>Sara Wilsson</h3>
-							<h4>Designer</h4>
-						</div>
-					</div><!-- End testimonial item -->
-
-					<div class="swiper-slide">
-						<div class="testimonial-item">
-							<p>
-								<i class="bx bxs-quote-alt-left quote-icon-left"></i>
-								Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis minim tempor labore quem eram duis noster aute amet eram fore quis sint minim.
-								<i class="bx bxs-quote-alt-right quote-icon-right"></i>
-							</p>
-							<img src="/assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
-							<h3>Jena Karlis</h3>
-							<h4>Store Owner</h4>
-						</div>
-					</div><!-- End testimonial item -->
-
-					<div class="swiper-slide">
-						<div class="testimonial-item">
-							<p>
-								<i class="bx bxs-quote-alt-left quote-icon-left"></i>
-								Fugiat enim eram quae cillum dolore dolor amet nulla culpa multos export minim fugiat minim velit minim dolor enim duis veniam ipsum anim magna sunt elit fore quem dolore labore illum veniam.
-								<i class="bx bxs-quote-alt-right quote-icon-right"></i>
-							</p>
-							<img src="/assets/img/testimonials/testimonials-4.jpg" class="testimonial-img" alt="">
-							<h3>Matt Brandon</h3>
-							<h4>Freelancer</h4>
-						</div>
-					</div><!-- End testimonial item -->
-
-					<div class="swiper-slide">
-						<div class="testimonial-item">
-							<p>
-								<i class="bx bxs-quote-alt-left quote-icon-left"></i>
-								Quis quorum aliqua sint quem legam fore sunt eram irure aliqua veniam tempor noster veniam enim culpa labore duis sunt culpa nulla illum cillum fugiat legam esse veniam culpa fore nisi cillum quid.
-								<i class="bx bxs-quote-alt-right quote-icon-right"></i>
-							</p>
-							<img src="/assets/img/testimonials/testimonials-5.jpg" class="testimonial-img" alt="">
-							<h3>John Larson</h3>
-							<h4>Entrepreneur</h4>
-						</div>
-					</div><!-- End testimonial item -->
-
-				</div>
-				<div class="swiper-pagination"></div>
-			</div>
-
-		</div>
-	</section><!-- End Testimonials Section -->
-
 </main><!-- End #main -->
-
 <!-- ======= Footer ======= -->
 <footer id="footer">
 
-	<div class="footer-top">
+	<div class="footer-top" style="background-color: #f2f2f7">
 		<div class="container">
 			<div class="row">
-
-				<div class="col-lg-3 col-md-6 footer-contact">
-					<h3>OnePage</h3>
-					<p>
-						A108 Adam Street <br>
-						New York, NY 535022<br>
-						United States <br><br>
-						<strong>Phone:</strong> +1 5589 55488 55<br>
-						<strong>Email:</strong> info@example.com<br>
-					</p>
+				<div class="col-md-6 footer-contact">
+					<h3>Sekretariat</h3>
+					<p>Pondok Pesantren Wali Songo Ngabar<br>Jl. Sunan Kalijaga, Ngabar, Siman, Ponorogo, Jawa Timur, Indonesia 63471<br>Telp, (0352) 311 206 WA Center: 0822-3486-5561<br>Email: sekretariat@ppwalisongo.id<br></p>
 				</div>
 
-				<div class="col-lg-2 col-md-6 footer-links">
-					<h4>Useful Links</h4>
-					<ul>
-						<li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-						<li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-						<li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-						<li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-						<li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-					</ul>
+				<div class="col-md-6 footer-contact text-md-end">
+					<h3>Ngabar Digital App</h3>
+					<div>
+						<a href="https://play.google.com/store/apps/details?id=com.ict.ponorogo_ngabar&amp;hl=in&amp;gl=US">
+							<img loading="lazy" width="250" height="74" src="http://ppwalisongo.id/home/wp-content/uploads/2021/08/googleplay-250.png" alt="" class="wp-image-1994">
+						</a>
+					</div>
 				</div>
-
-				<div class="col-lg-3 col-md-6 footer-links">
-					<h4>Our Services</h4>
-					<ul>
-						<li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
-						<li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-						<li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-						<li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-						<li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
-					</ul>
-				</div>
-
-				<div class="col-lg-4 col-md-6 footer-newsletter">
-					<h4>Join Our Newsletter</h4>
-					<p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
-					<form action="" method="post">
-						<input type="email" name="email"><input type="submit" value="Subscribe">
-					</form>
-				</div>
-
 			</div>
 		</div>
 	</div>
 
-	<div class="container d-md-flex py-4">
+	<div class="container py-4 text-center">
+		<div class="copyright">
+			Copyright © 2021 PPWS Ngabar | Modified by PPWS Ngabar.
+		</div>
 
-		<div class="me-md-auto text-center text-md-start">
-			<div class="copyright">
-				&copy; Copyright <strong><span>OnePage</span></strong>. All Rights Reserved
-			</div>
-			<div class="credits">
-				<!-- All the links in the footer should remain intact. -->
-				<!-- You can delete the links only if you purchased the pro version. -->
-				<!-- Licensing information: https://bootstrapmade.com/license/ -->
-				<!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/onepage-multipurpose-bootstrap-template/ -->
-				Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-			</div>
-		</div>
-		<div class="social-links text-center text-md-right pt-3 pt-md-0">
-			<a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-			<a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-			<a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-			<a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-			<a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-		</div>
+<!--		<div class="text-center">-->
+<!--			<div class="copyright">-->
+<!--				Copyright © 2021 PPWS Ngabar | Modified by PPWS Ngabar.-->
+<!--			</div>-->
+<!--			<div class="credits">-->
+<!--				Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>-->
+<!--			</div>-->
+<!--		</div>-->
+<!--		<div class="social-links text-center text-md-right pt-3 pt-md-0">-->
+<!--			<a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>-->
+<!--			<a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>-->
+<!--			<a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>-->
+<!--			<a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>-->
+<!--			<a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>-->
+<!--		</div>-->
 	</div>
 </footer><!-- End Footer -->
 

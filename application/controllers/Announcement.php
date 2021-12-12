@@ -18,16 +18,13 @@ class Announcement extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
-	function __construct(){
-		parent::__construct();
-		$this->load->model('Announcement_model');
-	}
-
 	public function index()
 	{
 		$this->load->model('Announcement_model');
 		$keyword = $this->input->get('keyword');
-		$data['data']=$this->Announcement_model->get_announcement($keyword);
+		if ($keyword) $data['data']=$this->Announcement_model->get_announcement($keyword);
+		else $data['data']=array();
+		$data['setting'] = $this->Announcement_model->get_setting();
 		$this->load->view('v_announcement', $data);
 	}
 }
