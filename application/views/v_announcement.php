@@ -165,6 +165,16 @@
 											<a href="/pengumuman" class="btn btn-primary" style="background-color: #2487ce">Kembali ke pencarian</a>
 										</div>
 									</div>
+								<?php } else { ?>
+									<div class="card">
+										<div class="card-header alert-info"></div>
+										<div class="card-body">
+											<?php echo $setting[0]->done;?>
+										</div>
+										<div class="card-footer">
+											<a href="/pengumuman" class="btn btn-primary" style="background-color: #2487ce">Kembali ke pencarian</a>
+										</div>
+									</div>
 								<?php } ?>
 							<?php } ?>
 						<?php } ?>
