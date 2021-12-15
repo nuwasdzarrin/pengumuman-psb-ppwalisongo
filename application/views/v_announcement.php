@@ -89,14 +89,14 @@
 					<?php if($startDate <= $now && $now <= $endDate) { ?>
 						<?php if(!$data) { ?>
 							<p>
-								Silahkan masukkan NIK atau nomor stambuk peserta untuk mencari hasil pengumuman
+								Silakan masukkan nomor registrasi atau NIK ananda untuk mencari hasil pengumuman
 							</p>
 							<form method="GET">
 								<div class="form-group mb-3">
 									<input type="number" class="form-control" name="keyword" <?php if (isset($_GET['keyword']) && !$data) echo "style='border-color: #dc3545;'"; ?> value="<?php if (isset($_GET['keyword'])) echo $_GET['keyword'];?>" required>
 									<?php if (isset($_GET['keyword']) && !$data) {?>
 									<div class="invalid-feedback error-message">
-										NIK atau nomor stambuk tidak ditemukan, Silahkan masukan kembali dengan benar
+										NIK atau nomor registrasi tidak ditemukan, Silakan masukan kembali dengan benar
 									</div>
 									<?php }?>
 								</div>
@@ -134,6 +134,10 @@
 													<tr>
 														<td class="text-start">Link SIAP</td>
 														<td class="text-start" style="overflow-wrap: anywhere;">: <a href="http://www.siap.ppwalisongo.id/user">http://www.siap.ppwalisongo.id/user</a></td>
+													</tr>
+													<tr>
+														<td class="text-start">Password login SIAP</td>
+														<td class="text-start" style="overflow-wrap: anywhere;">: <?php echo DefuseLib::decrypt($d->password) ?></td>
 													</tr>
 												</table>
 											</div>
